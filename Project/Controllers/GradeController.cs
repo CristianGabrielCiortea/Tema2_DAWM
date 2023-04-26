@@ -53,7 +53,7 @@ namespace Project.Controllers
 
             if (result == null)
             {
-                return BadRequest("Student not fount");
+                return BadRequest("Student not found");
             }
 
             return Ok(result);

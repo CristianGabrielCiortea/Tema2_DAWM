@@ -47,6 +47,12 @@ namespace Core.Services
         {
             var user = _unitOfWork.Users.GetByEmail(loginData.Email);
 
+            if (user == null)
+            {
+                return "Invalid user";
+            }
+
+
             var passwordFine = authorizationService.VerifyHashedPassword(user.PasswordHash, loginData.Password);
 
             if(passwordFine)
@@ -55,7 +61,7 @@ namespace Core.Services
             }
             else
             {
-                return null;
+                return "Invalid password";
             }
         }
     }

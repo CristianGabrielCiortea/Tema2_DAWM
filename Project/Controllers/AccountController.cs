@@ -26,8 +26,8 @@ namespace Project.Controllers
         [HttpPost("login")]
         public IActionResult Login(LoginDto loginData)
         {
-            _userService.Validate(loginData);
-            return Ok();
+            var receivedToken =  _userService.Validate(loginData);
+            return Ok(new {token = receivedToken});
         }
     }
 }
