@@ -2,6 +2,7 @@
 using Core.Services;
 using DataLayer.Dtos;
 using DataLayer.Entities;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Project.Controllers
@@ -18,6 +19,7 @@ namespace Project.Controllers
             this.studentService = studentService;
         }
 
+        [Authorize(Roles = "Teacher")]
         [HttpPost("/add")]
         public IActionResult Add(StudentAddDto payload)
         {
@@ -31,7 +33,7 @@ namespace Project.Controllers
             return Ok(result);
         }
 
-
+        [Authorize(Roles = "Teacher")]
         [HttpGet("/get-all")]
         public ActionResult<List<Student>> GetAll()
         {
@@ -40,6 +42,7 @@ namespace Project.Controllers
             return Ok(results);
         }
 
+        [Authorize(Roles = "Student,Teacher")]
         [HttpGet("/get/{studentId}")]
         public ActionResult<Student> GetById(int studentId)
         {
@@ -53,6 +56,7 @@ namespace Project.Controllers
             return Ok(result);
         }
 
+        [Authorize(Roles = "Teacher")]
         [HttpPatch("edit-name")]
         public ActionResult<bool> GetById([FromBody] StudentUpdateDto studentUpdateModel)
         {
@@ -66,6 +70,7 @@ namespace Project.Controllers
             return result;
         }
 
+        [Authorize(Roles = "Student,Teacher")]
         [HttpPost("grades-by-course")]
         public ActionResult<GradesByStudent> Get_CourseGrades_ByStudentId([FromBody] StudentGradesRequest request)
         {
@@ -73,6 +78,7 @@ namespace Project.Controllers
             return Ok(result);
         }
 
+        [Authorize(Roles = "Teacher")]
         [HttpGet("{classId}/class-students")]
         public IActionResult GetClassStudents([FromRoute] int classId)
         {
@@ -81,6 +87,7 @@ namespace Project.Controllers
             return Ok(results);
         }
 
+        [Authorize(Roles = "Teacher")]
         [HttpGet("grouped-students")]
         public IActionResult GetGroupedStudents()
         {
