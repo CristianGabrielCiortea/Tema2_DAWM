@@ -32,7 +32,7 @@ namespace Project.Controllers
             return Ok(result);
         }
 
-        [Authorize(Roles = "Student, Teacher")]
+        [Authorize(Roles = "Student,Teacher")]
         [HttpGet("/get-grades/{studentId}")]
         public ActionResult<Student> GetById(int studentId)
         {
@@ -53,7 +53,7 @@ namespace Project.Controllers
 
             if (result == null)
             {
-                return BadRequest("Student not fount");
+                return BadRequest("Student not found");
             }
 
             return Ok(result);

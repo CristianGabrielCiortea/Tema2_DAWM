@@ -31,7 +31,7 @@ namespace Project.Controllers
             return Ok(result);
         }
 
-        [Authorize(Roles = "Student, Teacher")]
+        [Authorize(Roles = "Student,Teacher")]
         [HttpGet("get-all")]
         public ActionResult<List<ClassViewDto>> GetAll()
         {

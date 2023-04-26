@@ -14,6 +14,5 @@ namespace DataLayer.Entities
 
         public string PasswordHash { get; set; }
 
-        public int StudentId { get; set; }
     }
 }
