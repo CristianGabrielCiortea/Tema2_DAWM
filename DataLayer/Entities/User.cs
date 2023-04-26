@@ -2,7 +2,7 @@
 
 namespace DataLayer.Entities
 {
-    public class User
+    public class User : BaseEntity
     {
         public string FirstName { get; set; }
 
