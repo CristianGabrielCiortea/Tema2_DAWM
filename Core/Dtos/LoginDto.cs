@@ -2,7 +2,7 @@
 
 namespace Core.Dtos
 {
-    public class UserLoginDto
+    public class LoginDto
     {
         [Required]
         public string Email { get; set; }

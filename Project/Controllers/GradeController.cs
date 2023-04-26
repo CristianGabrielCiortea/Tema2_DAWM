@@ -32,7 +32,7 @@ namespace Project.Controllers
             return Ok(result);
         }
 
-        [Authorize(Roles = "Student, Teacher")]
+        [Authorize(Roles = "Student,Teacher")]
         [HttpGet("/get-grades/{studentId}")]
         public ActionResult<Student> GetById(int studentId)
         {
