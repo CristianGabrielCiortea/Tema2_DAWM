@@ -1,10 +1,12 @@
 ﻿using Core.Dtos;
 using Core.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Project.Controllers
 {
 
+    [Authorize]
     [ApiController]
     [Route("api/classes")]
     public class ClassesController : ControllerBase
@@ -15,7 +17,7 @@ namespace Project.Controllers
         {
             this.classService = classService;
         }
-
+        [Authorize(Roles = "Teacher")]
         [HttpPost("add")]
         public IActionResult Add(ClassAddDto payload)
         {
@@ -29,6 +31,7 @@ namespace Project.Controllers
             return Ok(result);
         }
 
+        [Authorize(Roles = "Student, Teacher")]
         [HttpGet("get-all")]
         public ActionResult<List<ClassViewDto>> GetAll()
         {

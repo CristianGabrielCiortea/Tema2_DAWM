@@ -1,10 +1,12 @@
 ﻿using Core.Dtos;
 using Core.Services;
 using DataLayer.Entities;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Project.Controllers
 {
+    [Authorize]
     [ApiController]
     [Route("api/grades")]
     public class GradeController : ControllerBase
@@ -16,6 +18,7 @@ namespace Project.Controllers
             this.gradeService = gradeService;
         }
 
+        [Authorize(Roles = "Teacher")]
         [HttpPost("add-grade")]
         public IActionResult Add(GradeAddDto payload)
         {
@@ -29,6 +32,7 @@ namespace Project.Controllers
             return Ok(result);
         }
 
+        [Authorize(Roles = "Student, Teacher")]
         [HttpGet("/get-grades/{studentId}")]
         public ActionResult<Student> GetById(int studentId)
         {
@@ -41,7 +45,7 @@ namespace Project.Controllers
 
             return Ok(result);
         }
-
+        [Authorize(Roles = "Teacher")]
         [HttpGet("/get-all-grades")]
         public ActionResult<Student> GetAll()
         {
