@@ -1,4 +1,6 @@
-﻿using DataLayer.Entities;
+﻿using Core.Dtos;
+using DataLayer;
+using DataLayer.Entities;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using System;
@@ -15,15 +17,67 @@ namespace Core.Services
     public class AuthorizationService
     {
         private readonly string _securityKey;
+        
+        private readonly UnitOfWork _unitOfWork;
 
         private int PBKDF2IterCount = 1000;
         private int PBKDF2SubkeyLength = 256 / 8;
         private int SaltSize = 128 / 8;
 
 
-        public AuthorizationService(IConfiguration config)
+        public AuthorizationService(IConfiguration config, UnitOfWork unitOfWork)
         {
             _securityKey = config["JWT:SecurityKey"];
+            _unitOfWork = unitOfWork;
+        }
+
+        public void Register(UserRegisterDto registerData)
+        {
+            if (registerData == null && _unitOfWork.Users.GetByEmail(registerData.Email) != null)
+            {
+                return;
+            }
+
+            var hashedPassword = HashPassword(registerData.Password);
+
+            var user = new User
+            {
+                FirstName = registerData.FirstName,
+                LastName = registerData.LastName,
+                Email = registerData.Email,
+                PasswordHash = hashedPassword,
+                StudentId = registerData.StudentId
+            };
+
+            _unitOfWork.Users.Insert(user);
+            _unitOfWork.SaveChanges();
+        }
+
+        public string Login(UserLoginDto loginData)
+        {
+            if(loginData == null)
+            {
+                return "Invalid login data!";
+            }
+
+            var user = _unitOfWork.Users.GetByEmail(loginData.Email);
+            if (user == null)
+            {
+                return "Invalid username!";
+            }
+
+            if(!VerifyHashedPassword(user.PasswordHash, loginData.Password))
+            {
+                return "Invalid password!";
+            }
+
+            var token = GetToken(user);
+            if (token == null)
+            {
+                return "Null token!";
+            }
+
+            return token;
         }
 
         public string GetToken(User user)
@@ -41,6 +95,7 @@ namespace Core.Services
             var roleClaim = new Claim("role", user.Role.ToString());
             var idClaim = new Claim("userId", user.Id.ToString());
             var infoClaim = new Claim("username", user.Email);
+            var studentIdClaim = new Claim("studentId", user.StudentId.ToString());
 
             var tokenDescriptior = new SecurityTokenDescriptor
             {

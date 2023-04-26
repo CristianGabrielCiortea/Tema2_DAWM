@@ -5,8 +5,12 @@ namespace DataLayer
     public class UnitOfWork
     {
         public StudentsRepository Students { get; }
+
         public ClassRepository Classes { get; }
+
         public GradeRepository Grades { get; }
+
+        public UsersRepository Users { get; }
 
         private readonly AppDbContext _dbContext;
 
@@ -15,13 +19,15 @@ namespace DataLayer
             AppDbContext dbContext,
             StudentsRepository studentsRepository,
             ClassRepository classes,
-            GradeRepository grades
+            GradeRepository grades,
+            UsersRepository users
         )
         {
             _dbContext = dbContext;
             Students = studentsRepository;
             Classes = classes;
             Grades = grades;
+            Users = users;
         }
 
         public void SaveChanges()
